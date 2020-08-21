@@ -48,7 +48,7 @@
           >
         </vue-monthly-picker>
         -->
-        <my-date-picker></my-date-picker>
+        <my-date-picker v-on:callback='callback'></my-date-picker>
     </div>
     </v-main>
 
@@ -80,6 +80,10 @@ export default {
   methods: {
     onMonthSelected: function() {
       alert('month selected ' + this.selectedMonth.format('yyyy-MM'))
+    },
+    callback(evt, resolve) {
+      console.log('callback called')
+      setTimeout(() => resolve('resolved'), 2000)
     }
   }
 };

@@ -48,12 +48,12 @@ import deepEqual  from 'deep-equal'
 export default {
     name: 'MyDatePicker',
     components: {
-    // eslint-disable-next-line vue/no-unused-components
-    Calendar,
-    DatePicker,
-    grid: Grid
-  },
-  created () {
+        // eslint-disable-next-line vue/no-unused-components
+        Calendar,
+        DatePicker,
+        grid: Grid
+    },
+    created () {
 
       const self = this
 
@@ -212,8 +212,20 @@ export default {
 
 
       },
-      onGridClick: function (event) {
+     onGridClick: function (event) {
+          const self = this
         console.log('onClickEvent: event=' + event)
+
+        var result = new Promise((resolve) => self.$emit('callback', event, resolve))
+
+        result.then((value) => console.log(value))
+
+        return result
+
+        //var resolve = new Promise.resolve
+        // await self.$emit('callback', event)
+
+        // console.log('onGridClick done')
     },
     onGridFocusChange: function (event) {
         // eslint-disable-next-line no-unused-vars
