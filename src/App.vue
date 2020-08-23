@@ -1,10 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
+    <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
@@ -27,18 +23,14 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
+      <v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text>
         <span class="mr-2">Latest Release</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <HelloWorld />
       <div style="width: 500px">
         hi
         <!--
@@ -48,43 +40,78 @@
           >
         </vue-monthly-picker>
         -->
-        <my-date-picker v-on:callback='callback'></my-date-picker>
-    </div>
+        <my-date-picker v-on:callback="callback"></my-date-picker>
+      </div>
     </v-main>
-
-    
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import HelloWorld from "./components/HelloWorld";
 // import VueMonthlyPicker from 'vue-monthly-picker'
-import MyDatePicker from './components/datepicker'
+import MyDatePicker from "./components/datepicker";
 
-import Vue from 'vue'
-Vue.component('my-date-picker', MyDatePicker)
+import Vue from "vue";
+Vue.component("my-date-picker", MyDatePicker);
 
+var EventBus = new Vue();
+
+import ItemStatus from './service/listStatus.js'
+
+// const ItemStatus = Object.freeze({
+//   OLD: "old",
+//   NEW: "new",
+//   UPDATED: "updated",
+// });
+
+var item_status = ItemStatus.NEW;
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
     HelloWorld,
-    MyDatePicker
+    MyDatePicker,
   },
 
   data: () => ({
     //
-    selectedMonth: null
+    selectedMonth: null,
   }),
+  mounted() {
+    const self = this;
+
+    EventBus.$on("doAction", function (data, resolve, reject) {
+      return self.doAction(data, resolve, reject);
+    });
+
+    switch (item_status) {
+      case ItemStatus.NEW:
+        console.log("NEW");
+        break;
+      case ItemStatus.OLD:
+        console.log("OLD");
+        break;
+      case ItemStatus.UPDATED:
+        console.log("UPDATED");
+        break;
+    }
+  },
   methods: {
-    onMonthSelected: function() {
-      alert('month selected ' + this.selectedMonth.format('yyyy-MM'))
+    doAction: function (data, resolve, reject) {
+      console.log("data: " + data.action);
+      console.log("resolve " + resolve);
+      console.log("reject" + reject);
+
+      return resolve("200");
+    },
+    onMonthSelected: function () {
+      alert("month selected " + this.selectedMonth.format("yyyy-MM"));
     },
     callback(evt, resolve) {
-      console.log('callback called')
-      setTimeout(() => resolve('resolved'), 2000)
-    }
-  }
+      console.log("callback called");
+      setTimeout(() => resolve("resolved"), 2000);
+    },
+  },
 };
 </script>
