@@ -88,14 +88,56 @@
         </v-row>
       </v-col>
     </v-row>
+    fire message : <input type='text' v-model='message' size=20 style="background-color:yellow;"> &nbsp;&nbsp;
+          <input type='button' value="fire message" @click="fireMessage" style="width: 100px; background-color: darkgray;"> <br>
+          here : <emit-async-await></emit-async-await> 여기까지...
   </v-container>
 </template>
 
 <script>
+
+import Vue from 'vue'
+import EmitAsyncAwait from './emitasyncawait'
+ 
+import {EventBus} from '../service/emitasyncawait_evtbus'
+import moment from 'vue-moment'
+Vue.use(moment)
+
+Vue.component("emit-async-await", EmitAsyncAwait);
+
   export default {
     name: 'HelloWorld',
+    components: {
+      EmitAsyncAwait
+    },
+    created() {
+      console.log('created called')
 
+      const self = this
+      console.log('created . self.message=' + self.message)
+    },
+    methods: {
+      now: function() {
+        const self = this
+
+        return self.$moment(new Date()).format('HH:mm:ss')
+      },
+      fireMessage: async function() {
+        const self = this
+
+        console.log('[' + self.now() + '] ' + self.message + ' fired now...')
+
+        let result = new Promise((resolve) => EventBus.$emit('fire-message', self.message, resolve) )
+
+        await result;
+
+        result.then( (resultCode) => {
+          console.log('[' + self.now() + '] ' +  'resultCode = ' + resultCode)
+        });  
+      }
+    },
     data: () => ({
+      message: '',
       ecosystem: [
         {
           text: 'vuetify-loader',
