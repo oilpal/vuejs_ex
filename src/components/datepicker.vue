@@ -44,6 +44,8 @@ Vue.component('date-picker', DatePicker)
 
 import deepEqual  from 'deep-equal'
 
+var EventBus = new Vue()
+
 // Or just use in separate component
 export default {
     name: 'MyDatePicker',
@@ -211,6 +213,25 @@ export default {
         alert('onDateChanged. today=' + strDate)
 
 
+        let prms = new Promise((resolve, reject) => {
+            var data = {
+                action: 'getUser',
+                id: 10
+            }
+
+            console.log('eventbus.emit() now')
+            EventBus.$emit('doAction', data, resolve, reject)
+        })
+
+        console.log('prms.then before')
+
+        prms.then((res) => {
+            console.log('prms.then() : ' + res)
+            // use res
+        }).catch((err) => {
+            // handle error
+            console.log('prms.catch() : ' + err)
+        })
       },
      onGridClick: function (event) {
           const self = this
